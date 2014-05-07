@@ -20,5 +20,8 @@
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/Gasol/node-nis/issues"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2"
   }
 }
