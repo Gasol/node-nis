@@ -1,8 +1,8 @@
 {
-  "name": "node-nis",
+  "name": "nis",
   "version": "0.1.0",
   "description": "",
-  "main": "test.js",
+  "main": "nis",
   "scripts": {
     "test": "mocha",
     "install": "node-gyp rebuild"
