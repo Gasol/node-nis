@@ -1,0 +1,24 @@
+{
+  "name": "node-nis",
+  "version": "0.1.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "mocha",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gasol/node-nis"
+  },
+  "keywords": [
+    "nis",
+    "yp"
+  ],
+  "author": "Gasol Wu <gasol.wu@gmail.com>",
+  "license": "BSD-3-Clause",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/Gasol/node-nis/issues"
+  }
+}
