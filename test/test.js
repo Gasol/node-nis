@@ -1,6 +1,5 @@
 var assert = require('assert');
 var nis = require('../build/Release/nis');
-assert.equal('object', typeof(nis));
 
 describe('NIS', function() {
     describe('create object', function() {
