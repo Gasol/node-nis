@@ -2,7 +2,7 @@
     "targets": [
         {
             "target_name": "nis",
-            "sources": [ "nis.cc" ]
+            "sources": [ "binding.cc" ]
         }
     ]
 }
