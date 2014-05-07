@@ -6,6 +6,7 @@ describe('NIS', function() {
         it('should return object with default domain', function() {
             var yp = nis();
             assert.equal('object', typeof(yp));
+            assert.equal('+kkcorp', yp.domain_name);
         })
     })
 });
