@@ -1,7 +1,7 @@
 {
   "name": "nis",
   "version": "0.1.0",
-  "description": "",
+  "description": "NIS/YP bindings for v8",
   "main": "nis",
   "scripts": {
     "test": "mocha",
