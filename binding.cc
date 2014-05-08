@@ -74,7 +74,7 @@ NAN_METHOD(Next) {
     Local<Object> obj = Object::New();
     obj->Set(String::New("key"), String::New(outkey, outkeylen));
     obj->Set(String::New("value"), String::New(outval, outvallen));
-    return obj;
+    return scope.Close(obj);
 }
 
 NAN_METHOD(First) {
@@ -104,7 +104,7 @@ NAN_METHOD(First) {
     Local<Object> obj = Object::New();
     obj->Set(String::New("key"), String::New(outkey, outkeylen));
     obj->Set(String::New("value"), String::New(outval, outvallen));
-    return obj;
+    return scope.Close(obj);
 }
 
 NAN_METHOD(Master) {
@@ -130,7 +130,7 @@ NAN_METHOD(Master) {
         ThrowException(Exception::Error(errorMessage));
     }
 
-    return String::New(outname);
+    return scope.Close(String::New(outname));
 }
 
 NAN_METHOD(Order) {
@@ -156,7 +156,7 @@ NAN_METHOD(Order) {
         ThrowException(Exception::Error(errorMessage));
     }
 
-    return Integer::New(outorder);
+    return scope.Close(Integer::New(outorder));
 }
 
 NAN_METHOD(All) {
