@@ -1,11 +1,34 @@
 #include <node.h>
 #include <nan.h>
+#include <rpcsvc/yp.h>
 #include <rpcsvc/ypclnt.h>
 
 using namespace v8;
 
 extern "C" {
     int foreach_all(unsigned long instatus, char *inkey, int inkeylen, char *inval, int invallen, void *data);
+}
+
+NAN_METHOD(Maplist) {
+    HandleScope scope;
+    int error;
+    struct ypmaplist *maplist;
+    String::Utf8Value domain(args.Holder()->Get(NanSymbol("domain_name")));
+
+    error = yp_maplist(*domain, &maplist);
+    if (error) {
+        Local<String> errorMessage = String::New(yperr_string(error));
+        ThrowException(Exception::Error(errorMessage));
+    }
+
+    Local<Array> array = Array::New(0);
+    struct ypmaplist *cur = maplist;
+    int i = 0;
+    while (cur) {
+        array->Set(i++, String::New(cur->map));
+        cur = cur->next;
+    }
+    return scope.Close(array);
 }
 
 NAN_METHOD(Match) {
@@ -225,6 +248,7 @@ NAN_METHOD(CreateObject) {
     obj->Set(NanSymbol("first"), FunctionTemplate::New(First)->GetFunction());
     obj->Set(NanSymbol("next"), FunctionTemplate::New(Next)->GetFunction());
     obj->Set(NanSymbol("match"), FunctionTemplate::New(Match)->GetFunction());
+    obj->Set(NanSymbol("maplist"), FunctionTemplate::New(Maplist)->GetFunction());
     return scope.Close(obj);
 }
 
