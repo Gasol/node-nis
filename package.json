@@ -16,7 +16,7 @@
     "yp"
   ],
   "author": "Gasol Wu <gasol.wu@gmail.com>",
-  "license": "BSD-3-Clause",
+  "license": "MIT",
   "gypfile": true,
   "bugs": {
     "url": "https://github.com/Gasol/node-nis/issues"
