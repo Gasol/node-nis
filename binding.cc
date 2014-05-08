@@ -8,6 +8,40 @@ extern "C" {
     int foreach_all(unsigned long instatus, char *inkey, int inkeylen, char *inval, int invallen, void *data);
 }
 
+NAN_METHOD(Match) {
+    HandleScope scope;
+    int error;
+
+    if (args.Length() < 2) {
+        ThrowException(Exception::TypeError(String::New("Not enough arguments")));
+        return scope.Close(Undefined());
+    }
+    if (!args[0]->IsString()) {
+        ThrowException(Exception::TypeError(String::New("First argument must be string")));
+        return scope.Close(Undefined());
+    }
+    if (!args[0]->IsString()) {
+        ThrowException(Exception::TypeError(String::New("Second argument must be string")));
+        return scope.Close(Undefined());
+    }
+
+    String::Utf8Value domain(args.Holder()->Get(NanSymbol("domain_name")));
+    String::Utf8Value mapname(args[0]->ToString());
+    String::Utf8Value inkey(args[1]->ToString());
+    char *outval;
+    int outvallen;
+
+    error = yp_match(*domain, *mapname, *inkey, inkey.length(), &outval, &outvallen);
+    if (YPERR_KEY == error) {
+        return scope.Close(Undefined());
+    } else if (error) {
+        Local<String> errorMessage = String::New(yperr_string(error));
+        ThrowException(Exception::Error(errorMessage));
+    }
+
+    return scope.Close(String::New(outval, outvallen));
+}
+
 NAN_METHOD(Next) {
     HandleScope scope;
     int error;
@@ -188,6 +222,7 @@ NAN_METHOD(CreateObject) {
     obj->Set(NanSymbol("master"), FunctionTemplate::New(Master)->GetFunction());
     obj->Set(NanSymbol("first"), FunctionTemplate::New(First)->GetFunction());
     obj->Set(NanSymbol("next"), FunctionTemplate::New(Next)->GetFunction());
+    obj->Set(NanSymbol("match"), FunctionTemplate::New(Match)->GetFunction());
     return scope.Close(obj);
 }
 
