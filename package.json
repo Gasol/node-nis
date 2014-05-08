@@ -1,11 +1,10 @@
 {
   "name": "nis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NIS/YP bindings for v8",
   "main": "nis",
   "scripts": {
-    "test": "mocha",
-    "install": "node-gyp rebuild"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
