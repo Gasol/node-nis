@@ -66,7 +66,9 @@ NAN_METHOD(Next) {
     int outkeylen, outvallen;
 
     error = yp_next(*domain, *mapname, *inkey, inkey.length(), &outkey, &outkeylen, &outval, &outvallen);
-    if (error) {
+    if (YPERR_NOMORE == error) {
+        return scope.Close(Undefined());
+    } else if (error) {
         Local<String> errorMessage = String::New(yperr_string(error));
         ThrowException(Exception::Error(errorMessage));
     }
