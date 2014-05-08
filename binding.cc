@@ -73,11 +73,11 @@ Handle<Value> CreateObject(const Arguments& args) {
     return scope.Close(obj);
 }
 
-void init(Handle<Object> exports, Handle<Object> module) {
+void Initialize(Handle<Object> exports, Handle<Object> module) {
     module->Set(
         String::NewSymbol("exports"),
         FunctionTemplate::New(CreateObject)->GetFunction()
     );
 }
 
-NODE_MODULE(nis, init);
+NODE_MODULE(nis, Initialize);
