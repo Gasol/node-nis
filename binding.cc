@@ -1,5 +1,5 @@
 #include <node.h>
-#include <v8.h>
+#include <nan.h>
 #include <rpcsvc/ypclnt.h>
 
 using namespace v8;
@@ -8,7 +8,7 @@ extern "C" {
     int foreach_all(unsigned long instatus, char *inkey, int inkeylen, char *inval, int invallen, void *data);
 }
 
-Handle<Value> All(const Arguments& args) {
+NAN_METHOD(All) {
     HandleScope scope;
     int error;
 
@@ -30,7 +30,7 @@ Handle<Value> All(const Arguments& args) {
     cb.data = (char *) &user_cb;
 
     String::Utf8Value mapname(args[0]->ToString());
-    String::Utf8Value domain(args.Holder()->Get(String::NewSymbol("domain_name")));
+    String::Utf8Value domain(args.Holder()->Get(NanSymbol("domain_name")));
 
     error = yp_all(*domain, *mapname, &cb);
     if (error) {
@@ -54,7 +54,7 @@ int foreach_all(unsigned long instatus, char *inkey, int inkeylen, char *inval, 
     return ret->Int32Value();
 }
 
-Handle<Value> CreateObject(const Arguments& args) {
+NAN_METHOD(CreateObject) {
     HandleScope scope;
     char* domp;
     int error;
@@ -65,9 +65,9 @@ Handle<Value> CreateObject(const Arguments& args) {
         Local<String> errorMessage = String::New(yperr_string(error));
         ThrowException(Exception::Error(errorMessage));
     }
-    obj->Set(String::NewSymbol("domain_name"), String::New(domp));
+    obj->Set(NanSymbol("domain_name"), String::New(domp));
     obj->Set(
-        String::NewSymbol("all"),
+        NanSymbol("all"),
         FunctionTemplate::New(All)->GetFunction()
     );
     return scope.Close(obj);
@@ -75,7 +75,7 @@ Handle<Value> CreateObject(const Arguments& args) {
 
 void Initialize(Handle<Object> exports, Handle<Object> module) {
     module->Set(
-        String::NewSymbol("exports"),
+        NanSymbol("exports"),
         FunctionTemplate::New(CreateObject)->GetFunction()
     );
 }
