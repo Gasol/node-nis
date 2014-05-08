@@ -8,6 +8,36 @@ extern "C" {
     int foreach_all(unsigned long instatus, char *inkey, int inkeylen, char *inval, int invallen, void *data);
 }
 
+NAN_METHOD(First) {
+    HandleScope scope;
+    int error;
+
+    if (args.Length() < 1) {
+        ThrowException(Exception::TypeError(String::New("Not enough arguments")));
+        return scope.Close(Undefined());
+    }
+    if (!args[0]->IsString()) {
+        ThrowException(Exception::TypeError(String::New("First argument must be string")));
+        return scope.Close(Undefined());
+    }
+
+    String::Utf8Value mapname(args[0]->ToString());
+    String::Utf8Value domain(args.Holder()->Get(NanSymbol("domain_name")));
+    char *outkey, *outval;
+    int outkeylen, outvallen;
+
+    error = yp_first(*domain, *mapname, &outkey, &outkeylen, &outval, &outvallen);
+    if (error) {
+        Local<String> errorMessage = String::New(yperr_string(error));
+        ThrowException(Exception::Error(errorMessage));
+    }
+
+    Local<Object> obj = Object::New();
+    obj->Set(String::New("key"), String::New(outkey, outkeylen));
+    obj->Set(String::New("value"), String::New(outval, outvallen));
+    return obj;
+}
+
 NAN_METHOD(Master) {
     HandleScope scope;
     int error;
@@ -121,6 +151,7 @@ NAN_METHOD(CreateObject) {
     obj->Set(NanSymbol("all"), FunctionTemplate::New(All)->GetFunction());
     obj->Set(NanSymbol("order"), FunctionTemplate::New(Order)->GetFunction());
     obj->Set(NanSymbol("master"), FunctionTemplate::New(Master)->GetFunction());
+    obj->Set(NanSymbol("first"), FunctionTemplate::New(First)->GetFunction());
     return scope.Close(obj);
 }
 
